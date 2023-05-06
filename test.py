@@ -7,7 +7,7 @@ import urllib
 from playsound import playsound
 from gtts import gTTS
 import os
-
+from PIL import Image
 headers = {'Content-type': 'application/json',
            'token': '-wGcnpMasnRrNWs3Grdc5vWV9l0FkIQrQ6BHbiPBB0UY1h2eI89NBD-O-mpaCvAl'}
 
@@ -55,7 +55,7 @@ image = ''
 
 class FileUpload(object):
     def __init__(self):
-        self.fileTypes = ["csv", "png", "jpg", "jpeg"]
+        self.fileTypes = ["png", "jpg", "jpeg"]
 
     def run(self):
         """
@@ -69,19 +69,19 @@ class FileUpload(object):
         file = st.file_uploader("Upload file", type=self.fileTypes)
         show_file = st.empty()
         if not file:
-            show_file.info("Please upload a file of type: " + ", ".join(["csv", "png", "jpg"]))
+            show_file.info("Please upload a file of type: " + ", ".join(["png", "jpg","jpeg"]))
             return
         content = file.getvalue()
         file_uploaded = 1
 
-        if isinst   ance(file, BytesIO):
+        if isinstance(file, BytesIO):
             show_file.image(file)
         else:
             data = pd.read_csv(file)
             st.dataframe(data.head(10))
         file.close()
 
-        image_path = str(file.name)
+        image_path = Image.open(str(file.name))
         encoder_path = "encoder-50-20.ckpt"
         decoder_path = "decoder-50-20.ckpt"
         vocab_path = "preprocessed_vocab_.pkl"
